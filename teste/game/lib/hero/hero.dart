@@ -129,7 +129,7 @@ class GameHero extends SimplePlayer with ObjectCollision, Lighting, TapGesture {
           text: [
             const TextSpan(
                 text:
-                    'Seja bem-vindo(a) ao teste técnico 02 do candidato Antônio Claudio!'),
+                    'Seja bem-vindo(a) ao teste técnico 02 do candidato Antônio Claudio! Ajude o nosso herói a derrotar os 11 inimigos presentes no cenário. Uma dica: os cogumelos são uma boa forma de conseguir alcançar o nosso objetivo! Espero que além de atingir os requisitos propostos pelo teste, eu consiga te divertir um pouco!'),
           ],
           person: SizedBox(
             height: 100,
