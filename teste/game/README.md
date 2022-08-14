@@ -25,7 +25,7 @@ Para jogar e testar meu projeto, aprresento algumas instruções principais:
     2. O ataque pode ser feito por meio da tecla "space" presente no teclado e do botão presente no canto inferior direito da tela;
     3. O ataque do personagem se dá baseado na última direção em que o mesmo se movimentou;
     
-**OBS**
+**OBS:**
     Antes de começar a jogar, clique sobre o personagem, que deixei uma mensagem para você. Espero que se divirta e que eu tenha atingido os requisitos esperados para o teste.
 
 
