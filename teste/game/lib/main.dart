@@ -28,12 +28,25 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> implements GameListener {
+  late GameController controller;
+  @override
+  void initState() {
+    controller = GameController()..addListener(this);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BonfireTiledWidget(
+      gameController: controller,
       joystick: Joystick(
           keyboardConfig: KeyboardConfig(
             keyboardDirectionalType: KeyboardDirectionalType.wasdAndArrows,
@@ -58,7 +71,7 @@ class MyHomePage extends StatelessWidget {
         'mushroom': (properties) => Mushroom(properties.position),
       }),
       player: GameHero(
-        Vector2(4 * tilesize, 4 * tilesize),
+        Vector2(4 * tilesize, 3 * tilesize),
       ),
       overlayBuilderMap: {
         'playerInterface': (context, game) => PlayerInterface(
@@ -72,7 +85,25 @@ class MyHomePage extends StatelessWidget {
         moveOnlyMapArea: true,
         zoom: 2.7,
       ),
-      lightingColorGame: Colors.black.withOpacity(0.5),
+      lightingColorGame: Colors.black.withOpacity(0.3),
     );
   }
+
+  @override
+  void changeCountLiveEnemies(int count) {
+    if (count == 0) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            content: Text(
+                'Parabéns, você conseguiu derrotar todos os seus inimigos!'),
+          );
+        },
+      );
+    }
+  }
+
+  @override
+  void updateGame() {}
 }

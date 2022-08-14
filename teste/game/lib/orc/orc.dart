@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:game/main.dart';
 import 'package:game/orc/orc_sprite_sheet.dart';
 
-class Orc extends SimpleEnemy with ObjectCollision {
+class Orc extends SimpleEnemy with ObjectCollision, AutomaticRandomMovement {
   bool canMove = true;
 
   Orc(Vector2 position)
@@ -16,7 +16,7 @@ class Orc extends SimpleEnemy with ObjectCollision {
             runLeft: OrcSpriteSheet.orcRunLeft,
           ),
           size: Vector2(25, 25),
-          speed: 20,
+          speed: 30,
         ) {
     setupCollision(
       CollisionConfig(
@@ -33,14 +33,26 @@ class Orc extends SimpleEnemy with ObjectCollision {
   @override
   void update(double dt) {
     if (canMove) {
-      seeAndMoveToPlayer(
-        closePlayer: (player) {
-          _executeAttack();
+      seePlayer(
+        observed: (player) {
+          seeAndMoveToPlayer(
+            closePlayer: (player) {
+              _executeAttack();
+            },
+            radiusVision: tilesize * 3,
+            margin: 4,
+          );
         },
-        radiusVision: tilesize * 3,
-        margin: 4,
+        notObserved: () {
+          runRandomMovement(
+            dt,
+            timeKeepStopped: 1000,
+          );
+        },
+        radiusVision: tilesize * 2,
       );
     }
+
     super.update(dt);
   }
 

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:game/main.dart';
 import 'package:game/hero/player_sprite_sheet.dart';
 
-class GameHero extends SimplePlayer with ObjectCollision, Lighting {
+class GameHero extends SimplePlayer with ObjectCollision, Lighting, TapGesture {
   bool canMove = true;
 
   GameHero(Vector2 position)
@@ -108,6 +108,37 @@ class GameHero extends SimplePlayer with ObjectCollision, Lighting {
         },
       );
     }
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          content: Text(
+              'Infelizmente perdemos para os nossos adversários. Tente novamente!'),
+        );
+      },
+    );
     super.die();
+  }
+
+  @override
+  void onTap() {
+    TalkDialog.show(
+      context,
+      [
+        Say(
+          text: [
+            const TextSpan(
+                text:
+                    'Seja bem-vindo(a) ao teste técnico 02 do candidato Antônio Claudio!'),
+          ],
+          person: SizedBox(
+            height: 100,
+            width: 100,
+            child: PlayerSpriteSheet.heroIdleRight.asWidget(),
+          ),
+          speed: 1,
+        ),
+      ],
+    );
   }
 }
