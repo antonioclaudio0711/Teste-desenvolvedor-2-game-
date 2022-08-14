@@ -1,8 +1,13 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
-import 'package:game/hero.dart';
+import 'package:game/decorations/chess.dart';
+import 'package:game/decorations/lamp.dart';
+import 'package:game/decorations/mushroom.dart';
+import 'package:game/hero/hero.dart';
+import 'package:game/interface/player_interface.dart';
+import 'package:game/orc/orc.dart';
 
-final double tilesize = 32;
+final double tilesize = 16;
 
 void main() {
   runApp(const MyApp());
@@ -30,17 +35,44 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BonfireTiledWidget(
       joystick: Joystick(
-        directional: JoystickDirectional(
-          color: const Color.fromARGB(255, 236, 106, 82),
-        ),
-      ),
-      map: TiledWorldMap(
-        'map/island.tmj',
-        forceTileSize: Size(tilesize, tilesize),
-      ),
+          keyboardConfig: KeyboardConfig(
+            keyboardDirectionalType: KeyboardDirectionalType.wasdAndArrows,
+          ),
+          directional: JoystickDirectional(
+            color: const Color.fromARGB(255, 145, 227, 238),
+          ),
+          actions: [
+            JoystickAction(
+              actionId: 1,
+              color: const Color.fromARGB(255, 145, 227, 238),
+              margin: const EdgeInsets.only(
+                right: 100,
+                bottom: 70,
+              ),
+            )
+          ]),
+      map: TiledWorldMap('map/island.tmj', objectsBuilder: {
+        'orc': (properties) => Orc(properties.position),
+        'lamp': (properties) => Lamp(properties.position),
+        'chess': (properties) => Chess(properties.position),
+        'mushroom': (properties) => Mushroom(properties.position),
+      }),
       player: GameHero(
-        Vector2(11 * tilesize, 9 * tilesize),
+        Vector2(4 * tilesize, 4 * tilesize),
       ),
+      overlayBuilderMap: {
+        'playerInterface': (context, game) => PlayerInterface(
+              game: game,
+            )
+      },
+      initialActiveOverlays: const [
+        PlayerInterface.overlayKey,
+      ],
+      cameraConfig: CameraConfig(
+        moveOnlyMapArea: true,
+        zoom: 2.7,
+      ),
+      lightingColorGame: Colors.black.withOpacity(0.5),
     );
   }
 }

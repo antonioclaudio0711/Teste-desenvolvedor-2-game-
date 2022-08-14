@@ -1,0 +1,88 @@
+import 'package:bonfire/bonfire.dart';
+import 'package:flutter/material.dart';
+import 'dart:async' as async;
+
+class PlayerInterface extends StatefulWidget {
+  static const overlayKey = 'playerInterface';
+  final BonfireGame game;
+  const PlayerInterface({Key? key, required this.game}) : super(key: key);
+
+  @override
+  State<PlayerInterface> createState() => _PlayerInterfaceState();
+}
+
+class _PlayerInterfaceState extends State<PlayerInterface> {
+  final double width_max = 100;
+  double widthCurrent = 100;
+  double life = 0;
+  late async.Timer _lifeTime;
+
+  @override
+  void initState() {
+    _lifeTime = async.Timer.periodic(
+      const Duration(milliseconds: 100),
+      _verifyLife,
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _lifeTime.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Stack(
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width: widthCurrent,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+              Container(
+                width: width_max,
+                height: 20,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(color: Colors.white),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  void _verifyLife(async.Timer timer) {
+    if (life != (widget.game.player?.life ?? 0)) {
+      setState(() {
+        life = widget.game.player?.life ?? 0;
+
+        final percent = life / (widget.game.player?.maxLife ?? 0);
+        widthCurrent = width_max * percent;
+      });
+    }
+  }
+}
